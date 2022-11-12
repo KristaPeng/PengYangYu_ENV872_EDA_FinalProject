@@ -1,0 +1,129 @@
+---
+output: 
+  pdf_document:
+    keep_tex: yes
+    fig_caption: yes
+    number_sections: yes
+geometry: margin=2.54cm
+title: "Insert title of project here"
+subtitle: https://github.com/KristaPeng/PengYangYu_ENV872_EDA_FinalProject.git
+author: "Name"
+fontsize: 12pt
+mainfont: Times New Roman
+
+---
+
+\newpage
+\tableofcontents 
+\newpage
+\listoftables 
+\newpage
+\listoffigures 
+\newpage
+
+```{r setup, include=FALSE}
+# Set your working directory
+
+# Load your packages
+
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+
+library(zoo)
+library(agricolae)
+library(sf)
+library(leaflet)
+library(mapview)
+library(RColorBrewer)
+
+# Set your ggplot theme
+theme_set(theme_bw)
+
+# Load your datasets
+setwd("E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Raw")
+list <- list.files()
+o3_combined <- data.frame()
+for (i in list) {
+path <- i
+o3_combined <- rbind(o3_combined, read.csv(file = path, header = TRUE, stringsAsFactors = TRUE))
+}
+
+o3_combined$Date <- as.Date(o3_combined$Date, '%m/%d/%Y')
+
+# Data Wrangling
+o3_cleaned <- 
+  o3_combined %>%
+  select(Date, Daily.Max.8.hour.Ozone.Concentration, DAILY_AQI_VALUE, Site.Name, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
+  mutate('Month'= month(Date), 'Year' = year(Date)) %>%
+  arrange(Year, Month)
+
+names(o3_cleaned) <- c('Date', 'Concentration', 'DailyAQI', 'SiteName', 'County', 'Latitude', 'Longitude', 'Month','Year')
+
+# Fill out blank date
+Days <- as.data.frame(seq(as.Date("2016-01-01"), as.Date("2022-11-08"), "days"))
+names(Days) <- c("Date")
+o3_fulldate <- 
+  left_join(Days, o3_cleaned, by = "Date") %>%
+  mutate('Month'= month(Date), 'Year' = year(Date))
+colSums(is.na(o3_fulldate))
+
+# Linear interpolation of concentration on blank date
+o3_fulldate$Concentration <- na.approx(o3_fulldate$Concentration)
+
+# Generate mean o3 value dateframe
+o3_monthly <- o3_fulldate %>%
+  group_by(Year, Month) %>%
+  summarise(mean_o3Con = mean(Concentration))
+
+summary(o3_fulldate)
+
+# Output processed data
+write.csv(o3_combined, file = "E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_combined.csv")
+write.csv(o3_cleaned, file = "E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_cleaned.csv")
+write.csv(o3_fulldate, file = "E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_fulldate.csv")
+write.csv(o3_complete, file = "E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_complete.csv")
+write.csv(o3_monthly, file = "E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_monthly.csv")
+```
+
+
+# Rationale and Research Questions
+
+
+
+\newpage
+
+# Dataset Information
+
+
+
+\newpage
+
+# Exploratory Analysis 
+
+
+
+\newpage
+
+# Analysis
+
+
+
+## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
+
+## Question 2: 
+
+
+
+
+\newpage
+
+# Summary and Conclusions
+
+
+\newpage
+
+# References
+<add references here if relevant, otherwise delete this section> 
