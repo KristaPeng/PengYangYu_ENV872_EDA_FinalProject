@@ -1,0 +1,141 @@
+---
+title: "Project_DataVisulization"
+author: "Yanxi Peng (Krista)"
+date: "2022-11-14"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+
+#install.packages('formatR')
+#knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=80),tidy=TRUE)
+```
+# Set up R session
+```{r, message = FALSE}
+# Load packages
+library(dplyr)
+library(lubridate)
+library(tidyverse)
+library(ggplot2)
+# Set working directory
+
+setwd('C:/Users/16920/Documents/R/EDA-Fall2022/Project/PengYangYu_ENV872_EDA_FinalProject')
+
+# Set your ggplot theme
+theme_set(theme_bw())
+
+# Read in dataset
+o3_cleaned <-read.csv("./Data/Processed/o3_cleaned.csv", stringsAsFactors = TRUE)
+
+#replace the sitename
+
+o3_cleaned <- o3_cleaned %>% 
+  mutate(SiteName = str_replace(SiteName, 
+                                "OZONE MONITOR ON SW SIDE OF TOWER/MET EQUIPMENT 10FT ABOVE TOWER",
+                                "OZONE MONITOR"))
+
+```
+
+# Obtain basic summaries of the data
+```{r}
+dim(o3_cleaned)
+summary(o3_cleaned)
+```
+> This dataset have overall 69363 observation and 9 variables, including collecting date, Ozone concentration, Daily AQI value, site name, county name, latitude, longitude, month and year. From the summary, we can conclude that more data are collected in the garinger high school, rockwell and millbrook school than other site, and we can also use ggplot to study the data distribution in different site and year and determine the site name and year that can best used for analysis.
+
+## Explore data graphically
+
+###  Generate a plot of the number of ozone concentrations collected conducted by year
+```{r}
+ggplot(o3_cleaned,aes(x=Year)) +
+   geom_bar(fill = "Maroon",color = "Violet Red",alpha = 0.5)+
+  labs(title='Ozone Concentration Data Distribution in Years')+
+  scale_x_continuous(breaks=seq(2016, 2022, 1))
+```
+
+> From the bar plot, the number of ozone concertration data collected in different year are different. For further research, we can either use the newest from year 2022 or the year that has the most count, which is year 2019 from this plot.
+
+### Generate a plot of the number of ozone concentrations collected conducted by site
+
+```{r}
+ggplot(o3_cleaned,aes(x=SiteName)) +
+   geom_bar(fill = "darkolivegreen2",
+            color = "darkolivegreen4",
+            alpha = 0.5)+
+  labs(title='Ozone Concentration Data Distribution in Different Site')+
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust=1,size =6))
+```
+
+>From the bar plot, the number of data samples collected at different site varied considerably. For further analysis in this project, to ensure the accuracy of the results, we should choose the site with more data extraction as the analysis object. In this case, garinger high school, rockwell, millbrook school and coweeta can be consider to use in data analysis part.
+
+### Is there any relation between Daily AQI and O3 Concentration?
+
+```{r}
+ggplot(o3_cleaned,aes(x = DailyAQI, 
+                      y = Concentration)) +
+  geom_point(shape = 20, size = 1.2, 
+             stroke = 1,color = 'plum2')+
+  geom_smooth(method=lm,color='purple1')+
+  labs(title='Ozone Concentration vs. Daily AQI',
+       x='Daily AQI',y='Ozone Concentration')
+```
+
+> From the plot, we do observe a linear relation between Ozone concentration and daily AQI. Hence, in data analysis part, the relationship can be treat as simple linear regression model to answer the reasearch question.
+
+
+### Boxplot: Relationship between O3 Concentration and month (2022)
+```{r}
+o3_2022 <- filter(o3_cleaned,Year == '2022')
+o3_2022$Month <- month.abb[o3_2022$Month]
+o3_2022$Month  <- factor(o3_2022$Month , levels = month.abb)
+
+
+ggplot(o3_2022, aes(x = Month, 
+                    y = Concentration,fill = Month)) +
+  geom_boxplot() +
+  scale_x_discrete(drop = F)+
+  theme(legend.position="none")+
+  labs(title='Ozone Concentration vs. Month',
+       x='Month',y='Ozone Concentration')
+
+```
+
+> Note that the data for December is missing because 2022 is not over yet. It can be seen from the plot that the ozone concentration varies according to the month, and the average ozone concentration of each month is different. We can apply Shapiro-Wilk test, Bartlett's test, and ANOVA to further explore the relationship between the average ozone concentration and the month. Overall, June has the highest ozone concentration values, and November as well as January have the lowest ozone concentration values. In addition, the relationship between ozone concentration and season is not obvious. For example, the ozone concentration in April (spring) is higher than that in August (summer), but the highest concentration value also happend in summer (June).
+
+### Violin plot: Relationship 03 Concentration and Year
+```{r}
+rockwell_o3 <-subset(o3_cleaned,SiteName %in% 
+                            c("Rockwell"))
+ggplot(rockwell_o3, 
+       aes(x = Year, y = Concentration,group=Year,fill=Concentration)) +
+  geom_violin(color="red", 
+               fill="orange", alpha=0.2)+
+  geom_point( shape = 20,size=0.9, position = position_jitterdodge(), color="darkred",alpha=1)+
+  labs(title='Ozone Concentration vs. Year in Rockwell',
+       x='Month',y='Ozone Concentration')+
+  scale_x_continuous(breaks=seq(2016, 2022, 1))+
+  theme(legend.position="none")
+```
+
+> Since the distribution of Ozone concentration differ from site, so we decided to choose Rockwell as our focus. From the violin plot, the ozone concentration values from year 2016 to 2022 are most gather around 0.04, and each year have different max and min. To further analysis the change of ozone concentrations from 2016 to 2022, we can apply time series to this research question.
+
+### Plot a subset of sitename
+```{r}
+sitename_subset <- subset(o3_cleaned,SiteName %in% 
+                            c("Rockwell",'Garinger High School', 'Millbrook School'))
+ggplot(sitename_subset, aes(x = Year, y = Concentration,color = SiteName)) +
+  geom_point(shape = 20, size = 1.2, 
+             stroke = 1)+
+  facet_wrap(~SiteName,scales = "free")+
+  scale_x_continuous(breaks=seq(2016, 2022, 1))+
+  theme(legend.position="none")+
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust=1,size =6))
+
+```
+>
