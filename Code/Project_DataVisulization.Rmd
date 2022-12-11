@@ -45,7 +45,7 @@ o3_cleaned <- o3_cleaned %>%
 dim(o3_cleaned)
 summary(o3_cleaned)
 ```
-> This dataset have overall 69363 observation and 9 variables, including collecting date, Ozone concentration, Daily AQI value, site name, county name, latitude, longitude, month and year. From the summary, we can conclude that more data are collected in the garinger high school, rockwell and millbrook school than other site, and we can also use ggplot to study the data distribution in different site and year and determine the site name and year that can best used for analysis.
+> This dataset has an overall 69363 observations and 9 variables, including collecting date, Ozone concentration, Daily AQI value, site name, county name, latitude, longitude, month, and year. From the summary, we can conclude that more data are collected in the Garinger high school, Rockwell, and Millbrook schools than in other sites, and we can also use ggplot to study the data distribution in different sites and years and determine the best site name and year that can be used for analysis.
 
 ## Explore data graphically
 
@@ -57,7 +57,7 @@ ggplot(o3_cleaned,aes(x=Year)) +
   scale_x_continuous(breaks=seq(2016, 2022, 1))
 ```
 
-> From the bar plot, the number of ozone concertration data collected in different year are different. For further research, we can either use the newest from year 2022 or the year that has the most count, which is year 2019 from this plot.
+> From the bar plot, the number of ozone concentration data collected in the different years is different. For further research, we can either use the newest from the year 2022 or the year that has the most count, which is the year 2019 from this plot.
 
 ### Generate a plot of the number of ozone concentrations collected conducted by site
 
@@ -71,7 +71,7 @@ ggplot(o3_cleaned,aes(x=SiteName)) +
                                    hjust=1,size =6))
 ```
 
->From the bar plot, the number of data samples collected at different site varied considerably. For further analysis in this project, to ensure the accuracy of the results, we should choose the site with more data extraction as the analysis object. In this case, garinger high school, rockwell, millbrook school and coweeta can be consider to use in data analysis part.
+> From the bar plot, the number of data samples collected at different sites varied considerably. For further analysis in this project, to ensure the accuracy of the results, we should choose the site with more data extraction as the analysis object. In this case, Garinger high school, Rockwell, Millbrook School, and Coweeta can be considered to use in the data analysis part.
 
 ### Is there any relation between Daily AQI and O3 Concentration?
 
@@ -85,7 +85,7 @@ ggplot(o3_cleaned,aes(x = DailyAQI,
        x='Daily AQI',y='Ozone Concentration')
 ```
 
-> From the plot, we do observe a linear relation between Ozone concentration and daily AQI. Hence, in data analysis part, the relationship can be treat as simple linear regression model to answer the reasearch question.
+> From the plot, we do observe a linear relation between Ozone concentration and daily AQI. Hence, in the data analysis part, the relationship can be treated as a simple linear regression model to answer the research question. For further analysis, we can generate the linear model between these two parameters in the data analysis part.
 
 
 ### Boxplot: Relationship between O3 Concentration and month (2022)
@@ -105,7 +105,7 @@ ggplot(o3_2022, aes(x = Month,
 
 ```
 
-> Note that the data for December is missing because 2022 is not over yet. It can be seen from the plot that the ozone concentration varies according to the month, and the average ozone concentration of each month is different. We can apply Shapiro-Wilk test, Bartlett's test, and ANOVA to further explore the relationship between the average ozone concentration and the month. Overall, June has the highest ozone concentration values, and November as well as January have the lowest ozone concentration values. In addition, the relationship between ozone concentration and season is not obvious. For example, the ozone concentration in April (spring) is higher than that in August (summer), but the highest concentration value also happend in summer (June).
+> Note that the data for December is missing because 2022 is not over yet. It can be seen from the plot that the ozone concentration varies according to the month, and the average ozone concentration of each month is different. We can apply the Shapiro-Wilk test, Bartlett's test, and ANOVA to further explore the relationship between the average ozone concentration and the month. Overall, June has the highest ozone concentration values, and November, as well as January, has the lowest ozone concentration values. In addition, the relationship between ozone concentration and the season is not obvious. For example, the ozone concentration in April (spring) is higher than that in August (summer), but the highest concentration value also happened in summer (June).
 
 ### Violin plot: Relationship 03 Concentration and Year
 ```{r}
@@ -122,7 +122,7 @@ ggplot(rockwell_o3,
   theme(legend.position="none")
 ```
 
-> Since the distribution of Ozone concentration differ from site, so we decided to choose Rockwell as our focus. From the violin plot, the ozone concentration values from year 2016 to 2022 are most gather around 0.04, and each year have different max and min. To further analysis the change of ozone concentrations from 2016 to 2022, we can apply time series to this research question.
+> Since the distribution of Ozone concentration differs from the site, so we decided to choose Rockwell as our focus. From the violin plot, the ozone concentration values from the year 2016 to 2022 are most gathered around 0.04, and each year has different max and min. To further analyze the change in ozone concentrations from 2016 to 2022, we can apply time series to this research question.
 
 ### Plot a subset of sitename
 ```{r}
@@ -138,4 +138,4 @@ ggplot(sitename_subset, aes(x = Year, y = Concentration,color = SiteName)) +
                                    hjust=1,size =6))
 
 ```
-> From the plot, we did not observe much difference in 
+> We selected the three locations with the maximum counts of concentration value and plot the distribution of concentration by years. And from that, we did not observe much difference between different locations. Thus, we could select Rockwell as our main focus.
