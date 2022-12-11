@@ -16,11 +16,11 @@ mainfont: Times New Roman
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FASLE)
 ```
 
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo = FALSE}
 # Set your working directory
 
 # Load your packages
@@ -53,6 +53,7 @@ o3_combined <- rbind(o3_combined, read.csv(file = path, header = TRUE, stringsAs
 o3_combined$Date <- as.Date(o3_combined$Date, '%m/%d/%Y')
 
 # Data Wrangling
+# Import the data sets downloaded from EPA (https://www.epa.gov/outdoor-air-quality-data/download-daily-data) 
 o3_cleaned <- 
   o3_combined %>%
   select(Date, Daily.Max.8.hour.Ozone.Concentration, DAILY_AQI_VALUE, Site.Name, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
@@ -61,7 +62,7 @@ o3_cleaned <-
 
 names(o3_cleaned) <- c('Date', 'Concentration', 'DailyAQI', 'SiteName', 'County', 'Latitude', 'Longitude', 'Month','Year')
 
-# Fill out blank date
+# Fill out blank date, organize columns and add month, year columns
 Days <- as.data.frame(seq(as.Date("2016-01-01"), as.Date("2022-11-08"), "days"))
 names(Days) <- c("Date")
 o3_fulldate <- 
@@ -69,7 +70,7 @@ o3_fulldate <-
   mutate('Month'= month(Date), 'Year' = year(Date))
 colSums(is.na(o3_fulldate))
 
-# Linear interpolation of concentration on blank date
+# Linear interpolation of concentration values on blank dates
 o3_fulldate$Concentration <- na.approx(o3_fulldate$Concentration)
 
 # Generate mean o3 value dateframe
@@ -79,7 +80,7 @@ o3_monthly <- o3_fulldate %>%
 
 summary(o3_fulldate)
 
-# Output processed data
+# Output processed data to csv
 write.csv(o3_combined, file = "E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_combined.csv")
 write.csv(o3_cleaned, file = "E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_cleaned.csv")
 write.csv(o3_fulldate, file = "E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_fulldate.csv")
