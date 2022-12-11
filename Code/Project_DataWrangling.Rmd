@@ -19,18 +19,14 @@ mainfont: Times New Roman
 knitr::opts_chunk$set(echo = FASLE)
 ```
 
-
 ```{r setup, include=FALSE, echo = FALSE}
 # Set your working directory
-
 # Load your packages
-
 library(dplyr)
 library(lubridate)
 library(tidyverse)
 library(lubridate)
 library(ggplot2)
-
 library(zoo)
 library(agricolae)
 library(sf)
@@ -49,7 +45,6 @@ for (i in list) {
 path <- i
 o3_combined <- rbind(o3_combined, read.csv(file = path, header = TRUE, stringsAsFactors = TRUE))
 }
-
 o3_combined$Date <- as.Date(o3_combined$Date, '%m/%d/%Y')
 
 # Data Wrangling
@@ -59,7 +54,6 @@ o3_cleaned <-
   select(Date, Daily.Max.8.hour.Ozone.Concentration, DAILY_AQI_VALUE, Site.Name, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
   mutate('Month'= month(Date), 'Year' = year(Date)) %>%
   arrange(Year, Month)
-
 names(o3_cleaned) <- c('Date', 'Concentration', 'DailyAQI', 'SiteName', 'County', 'Latitude', 'Longitude', 'Month','Year')
 
 # Fill out blank date, organize columns and add month, year columns
@@ -77,7 +71,6 @@ o3_fulldate$Concentration <- na.approx(o3_fulldate$Concentration)
 o3_monthly <- o3_fulldate %>%
   group_by(Year, Month) %>%
   summarise(mean_o3Con = mean(Concentration))
-
 summary(o3_fulldate)
 
 # Output processed data to csv
