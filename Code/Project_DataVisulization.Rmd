@@ -9,7 +9,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE, echo=False}
+```{r setup, include=FALSE, echo=FALSE}
 
 #install.packages('formatR')
 #knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
@@ -17,7 +17,7 @@ library(knitr)
 opts_chunk$set(tidy.opts=list(width.cutoff=80),tidy=TRUE)
 ```
 # Set up R session
-```{r, message = FALSE,, echo=False}
+```{r, message = FALSE,echo=FALSE}
 # Load packages
 library(dplyr)
 library(lubridate)
@@ -43,7 +43,7 @@ o3_cleaned <- o3_cleaned %>%
 ```
 
 # Obtain basic summaries of the data
-```{r,, echo=False}
+```{r,, echo=FALSE}
 dim(o3_cleaned)
 summary(o3_cleaned)
 ```
@@ -52,7 +52,7 @@ summary(o3_cleaned)
 ## Explore data graphically
 
 ###  Generate a plot of the number of ozone concentrations collected conducted by year
-```{r, echo=False}
+```{r, echo=FALSE}
 ggplot(o3_cleaned,aes(x=Year)) +
    geom_bar(fill = "Maroon",color = "Violet Red",alpha = 0.5)+
   labs(title='Ozone Concentration Data Distribution in Years')+
@@ -63,7 +63,7 @@ ggplot(o3_cleaned,aes(x=Year)) +
 
 ### Generate a plot of the number of ozone concentrations collected conducted by site
 
-```{r, echo=False}
+```{r, echo=FALSE}
 ggplot(o3_cleaned,aes(x=SiteName)) +
    geom_bar(fill = "darkolivegreen2",
             color = "darkolivegreen4",
@@ -77,7 +77,7 @@ ggplot(o3_cleaned,aes(x=SiteName)) +
 
 ### Is there any relation between Daily AQI and O3 Concentration?
 
-```{r, echo=False}
+```{r, message = FALSE,echo=FALSE}
 ggplot(o3_cleaned,aes(x = DailyAQI, 
                       y = Concentration)) +
   geom_point(shape = 20, size = 1.2, 
@@ -91,7 +91,7 @@ ggplot(o3_cleaned,aes(x = DailyAQI,
 
 
 ### Boxplot: Relationship between O3 Concentration and month (2022)
-```{r, echo=False}
+```{r, echo=FALSE}
 o3_2022 <- filter(o3_cleaned,Year == '2022')
 o3_2022$Month <- month.abb[o3_2022$Month]
 o3_2022$Month  <- factor(o3_2022$Month , levels = month.abb)
@@ -110,7 +110,7 @@ ggplot(o3_2022, aes(x = Month,
 > Note that the data for December is missing because 2022 is not over yet. It can be seen from the plot that the ozone concentration varies according to the month, and the average ozone concentration of each month is different. We can apply the Shapiro-Wilk test, Bartlett's test, and ANOVA to further explore the relationship between the average ozone concentration and the month. Overall, June has the highest ozone concentration values, and November, as well as January, has the lowest ozone concentration values. In addition, the relationship between ozone concentration and the season is not obvious. For example, the ozone concentration in April (spring) is higher than that in August (summer), but the highest concentration value also happened in summer (June).
 
 ### Violin plot: Relationship 03 Concentration and Year
-```{r, echo=False}
+```{r, echo=FALSE}
 rockwell_o3 <-subset(o3_cleaned,SiteName %in% 
                             c("Rockwell"))
 ggplot(rockwell_o3, 
@@ -127,7 +127,7 @@ ggplot(rockwell_o3,
 > Since the distribution of Ozone concentration differs from the site, so we decided to choose Rockwell as our focus. From the violin plot, the ozone concentration values from the year 2016 to 2022 are most gathered around 0.04, and each year has different max and min. To further analyze the change in ozone concentrations from 2016 to 2022, we can apply time series to this research question.
 
 ### Plot a subset of sitename
-```{r, echo=False}
+```{r, echo=FALSE}
 sitename_subset <- subset(o3_cleaned,SiteName %in% 
                             c("Rockwell",'Garinger High School', 'Millbrook School'))
 ggplot(sitename_subset, aes(x = Year, y = Concentration,color = SiteName)) +
@@ -140,4 +140,5 @@ ggplot(sitename_subset, aes(x = Year, y = Concentration,color = SiteName)) +
                                    hjust=1,size =6))
 
 ```
+
 > We selected the three locations with the maximum counts of concentration value and plot the distribution of concentration by years. And from that, we did not observe much difference between different locations. Thus, we could select Rockwell as our main focus.
