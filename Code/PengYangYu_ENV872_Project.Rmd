@@ -44,7 +44,7 @@ The alternative hypothesis: the ozone concentration change over time.
 
 Here we studied the ozone concentration trend at North Carolina from 2016 to 2022. The datasets were downloaded directly from EPA Outdoor Air Quality Data section (https://www.epa.gov/outdoor-air-quality-data/download-daily-data). The raw data contains detailed information including Date, Source, Site ID, POC, Daily Max, Units etc. Since not all variables are required in our project, we selected the necessary data and form a new dataframe which is comprised of variables including Date, Daily.Max.8.hour.Ozone.Concentration, DAILY_AQI_VALUE, Site.Name, COUNTY, SITE_LATITUDE, SITE_LONGITUDE. After the data selection, we add year and month column for further analysis and fill out NA values in the blank date with linear interpolation.
 
-```{r include=FALSE, echo = FALSE}
+```{r, include=FALSE, echo = FALSE}
 # Data Wrangling
 # Set working directory
 # Load  packages
@@ -65,7 +65,7 @@ library(tinytex)
 theme_set(theme_bw)
 
 # Load your datasets
-setwd("E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Raw")
+setwd("E:/things/Duke University/study/2022 Fall/ENVIRON 872/PengYangYu_ENV872_EDA_FinalProject/Data/Raw")
 list <- list.files()
 o3_combined <- data.frame()
 for (i in list) {
@@ -118,13 +118,13 @@ print(tb1)
 ```{r, message = FALSE,echo=FALSE}
 
 # Set working directory
-setwd('E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data')
+setwd('E:/things/Duke University/study/2022 Fall/ENVIRON 872/PengYangYu_ENV872_EDA_FinalProject/Data')
 
 # Set your ggplot theme
 mytheme <- theme_bw(base_size = 12) + theme(legend.position = "right")
 theme_set(mytheme)
 # Read in dataset
-o3_cleaned <-read.csv("E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_cleaned.csv", stringsAsFactors = TRUE)
+o3_cleaned <-read.csv("E:/things/Duke University/study/2022 Fall/ENVIRON 872/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_cleaned.csv", stringsAsFactors = TRUE)
 #replace the sitename
 o3_cleaned1 <- o3_cleaned %>% 
   mutate(SiteName = str_replace(SiteName, 
@@ -137,7 +137,7 @@ o3_cleaned1 <- o3_cleaned %>%
 dim(o3_cleaned1)
 summary(o3_cleaned1)
 ```
-> This dataset has an overall 69363 observations and 9 variables, including collecting date, Ozone concentration, Daily AQI value, site name, county name, latitude, longitude, month, and year. From the summary, we can conclude that more data are collected in the Garinger high school, Rockwell, and Millbrook schools than in other sites, and we can also use ggplot to study the data distribution in different sites and years and determine the best site name and year that can be used for analysis.
+This dataset has an overall 69363 observations and 9 variables, including collecting date, Ozone concentration, Daily AQI value, site name, county name, latitude, longitude, month, and year. From the summary, we can conclude that more data are collected in the Garinger high school, Rockwell, and Millbrook schools than in other sites, and we can also use ggplot to study the data distribution in different sites and years and determine the best site name and year that can be used for analysis.
 
 ## 3.2 The number of ozone concentrations collected conducted by year and sites
 ```{r, echo=FALSE, fig.cap="Fig.1 Ozone Concentration Data Distribution in Years", fig.align='center'}
@@ -147,7 +147,7 @@ ggplot(o3_cleaned1,aes(x=Year)) +
   scale_x_continuous(breaks=seq(2016, 2022, 1))
 ```
 
-> From the Fig.1 bar plot, the number of ozone concentration data collected in the different years is different. For further research, we can either use the newest from the year 2022 or the year that has the most count, which is the year 2019 from this plot.
+From the Fig.1 bar plot, the number of ozone concentration data collected in the different years is different. For further research, we can either use the newest from the year 2022 or the year that has the most count, which is the year 2019 from this plot.
 
 ```{r, echo=FALSE, fig.cap="Fig.2 Ozone Concentration Data Distribution in Different Sites", fig.align='center'}
 ggplot(o3_cleaned1,aes(x=SiteName)) +
@@ -159,7 +159,7 @@ ggplot(o3_cleaned1,aes(x=SiteName)) +
                                    hjust=1,size =6))
 ```
 
-> From the Fig.2 bar plot, the number of data samples collected at different sites varied considerably. For further analysis in this project, to ensure the accuracy of the results, we should choose the site with more data extraction as the analysis object. In this case, Garinger high school, Rockwell, Millbrook School, and Coweeta can be considered to use in the data analysis part.
+From the Fig.2 bar plot, the number of data samples collected at different sites varied considerably. For further analysis in this project, to ensure the accuracy of the results, we should choose the site with more data extraction as the analysis object. In this case, Garinger high school, Rockwell, Millbrook School, and Coweeta can be considered to use in the data analysis part.
 
 ## 3.3 Linear relation between Ozone concentration and daily AQI
 ```{r, message = FALSE, echo=FALSE, fig.cap="Fig.3 Ozone Concentration vs. Daily AQI", fig.align='center'}
@@ -171,7 +171,7 @@ ggplot(o3_cleaned1,aes(x = DailyAQI,
   labs(x='Daily AQI',y='Ozone Concentration (ppm)')
 ```
 
-> From the Fig.3, we do observe a linear relation between Ozone concentration and daily AQI. Hence, in the data analysis part, the relationship can be treated as a simple linear regression model to answer the research question. For further analysis, we can generate the linear model between these two parameters in the data analysis part.
+From the Fig.3, we do observe a linear relation between Ozone concentration and daily AQI. Hence, in the data analysis part, the relationship can be treated as a simple linear regression model to answer the research question. For further analysis, we can generate the linear model between these two parameters in the data analysis part.
 
 ## 3.4 Boxplot:Relationship between O3 Concentration and month (2022)
 ```{r, echo=FALSE, fig.cap="Fig.4 Ozone Concentration vs. Month (2022)", fig.align='center'}
@@ -186,7 +186,7 @@ ggplot(o3_2022, aes(x = Month,
   labs(x='Month',y='Ozone Concentration (ppm)')
 ```
 
-> Note that the data for December is missing because 2022 is not over yet. It can be seen from the Fig.4 that the ozone concentration varies according to the month, and the average ozone concentration of each month is different. We can apply the Shapiro-Wilk test, Bartlett's test, and ANOVA to further explore the relationship between the average ozone concentration and the month. Overall, June has the highest ozone concentration values, and November, as well as January, has the lowest ozone concentration values. In addition, the relationship between ozone concentration and the season is not obvious. For example, the ozone concentration in April (spring) is higher than that in August (summer), but the highest concentration value also happened in summer (June).
+Note that the data for December is missing because 2022 is not over yet. It can be seen from the Fig.4 that the ozone concentration varies according to the month, and the average ozone concentration of each month is different. We can apply the Shapiro-Wilk test, Bartlett's test, and ANOVA to further explore the relationship between the average ozone concentration and the month. Overall, June has the highest ozone concentration values, and November, as well as January, has the lowest ozone concentration values. In addition, the relationship between ozone concentration and the season is not obvious. For example, the ozone concentration in April (spring) is higher than that in August (summer), but the highest concentration value also happened in summer (June).
 
 ## 3.5 Violin plot: Relationship between O3 Concentration and month (2022)
 ```{r, echo=FALSE, fig.cap="Fig.5 Ozone Concentration vs. Year in Rockwell", fig.align='center'}
@@ -202,7 +202,7 @@ ggplot(rockwell_o3,
   theme(legend.position="none")
 ```
 
-> Since the distribution of Ozone concentration differs from the site, so we decided to choose Rockwell as our focus. From the Fig.5 violin plot, the ozone concentration values from the year 2016 to 2022 are most gathered around 0.04, and each year has different max and min. To further analyze the change in ozone concentrations from 2016 to 2022, we can apply time series to this research question.
+Since the distribution of Ozone concentration differs from the site, so we decided to choose Rockwell as our focus. From the Fig.5 violin plot, the ozone concentration values from the year 2016 to 2022 are most gathered around 0.04, and each year has different max and min. To further analyze the change in ozone concentrations from 2016 to 2022, we can apply time series to this research question.
 
 ## 3.6 Distribution of concentration at three different sites by years
 ```{r, echo=FALSE, fig.cap="Fig.6 Ozone Concentration vs. Year in Three Sites", fig.align='center'}
@@ -219,7 +219,7 @@ ggplot(sitename_subset, aes(x = Year, y = Concentration,color = SiteName)) +
   labs(y='Ozone Concentration (ppm)')
 ```
 
-> We selected the three locations with the maximum counts of concentration value and plot the distribution of concentration by years. And from the Fig.6, we did not observe much difference between different locations. Thus, we could select Rockwell as our main focus.
+We selected the three locations with the maximum counts of concentration value and plot the distribution of concentration by years. And from the Fig.6, we did not observe much difference between different locations. Thus, we could select Rockwell as our main focus.
 
 # 4 Analysis:
 ```{r prepare workspace, include=FALSE, message=FALSE, warning=FALSE}
@@ -261,7 +261,7 @@ O3_AQI_plot <- ggplot(EPAair_O3_22, aes(x = DailyAQI, y = Concentration))+
   geom_point(size=1.2)+
   geom_smooth(method="lm", width=0.8)+
   labs(x='Daily AQI',y='Ozone concentration')
-print(O3_AQI_plot)
+#print(O3_AQI_plot)
 # Linear model
 o3vsAQI <- lm(data=EPAair_O3_22, Concentration~DailyAQI)
 summary(o3vsAQI)
@@ -277,7 +277,7 @@ The null hypothesis: they have equal mean of concentrations
 
 The alternative hypothesis: they do not have equal mean of concentrations
 
-```{r Q2 ANOVA, echo=FALSE, fig.cap="Fig.8 Normal Q-Q Plot for concentrations and sites", fig.align='center'}
+```{r Q2 ANOVA, echo=FALSE, fig.cap="Fig.7 Normal Q-Q Plot for concentrations and sites", fig.align='center'}
 # Test for normality
 nor = 0
 for(site in unique(EPAair_O3_22$SiteName)){
@@ -311,7 +311,7 @@ The null hypothesis: the mean between 2021 and 2022 is equivalent
 
 The alternative hypothesis: the mean between 2021 and 2022 is not equivalent
 
-```{r Q3, echo=FALSE, fig.cap="Fig.9 Frequency polygons of ozone in 2021 and 2022", fig.align='center'}
+```{r Q3, echo=FALSE, fig.cap="Fig.8 Frequency polygons of ozone in 2021 and 2022", fig.align='center'}
 # Filter dataset for data from 2021 and 2022
 EPAair_O3_2122 <- filter(EPAair_O3, Year == '2021' | Year == '2022')
 # Frequency polygons of ozone in 2021 and 2022
@@ -322,7 +322,7 @@ o3_freq_2122 <- ggplot(EPAair_O3_2122, aes(x=Concentration, color=as.factor(Year
 print(o3_freq_2122)
 ```
 
-```{r Q3 T-test, echo=FALSE, fig.cap="Fig.10 Normal Q-Q Plot for concentrations in 2021 & 2022", fig.align='center'}
+```{r Q3 T-test, echo=FALSE, fig.cap="Fig.9 Normal Q-Q Plot for concentrations in 2021 & 2022", fig.align='center'}
 # Test for normality
 # shapiro.test() asks sample size be between 3 and 5000. Let's see the qqplot.
 #shapiro.test(EPAair_O3_2122$Concentration[EPAair_O3_2122$Year == '2021'])
@@ -342,7 +342,7 @@ The normal Q-Q plot shows that the data has small deviations from normal distrib
 
 Is there any trend of ozone concentrations in space?
 
-```{r Q4 Spatial analysis 1, message=FALSE, echo=FALSE, fig.cap="Fig.11 mapview of Ozone concentration in NC", fig.align='center'}
+```{r Q4 Spatial analysis 1, message=FALSE, echo=FALSE, fig.cap="Fig.10 mapview of Ozone concentration in NC", fig.align='center'}
 # For each site, find the mean values of ozone concentrations in 2022
  EPAair_O3_22_mean <- EPAair_O3_22 %>%
    group_by(SiteName, Latitude, Longitude) %>%
@@ -359,12 +359,13 @@ Is there any trend of ozone concentrations in space?
            layer.name="Ozone concentration")
 ```
 
-```{r Q4 Spatial analysis 2, message=FALSE, echo=FALSE, fig.cap="Fig.12 Ozone concentration in NC", fig.align='center'}
+```{r Q4 Spatial analysis 2, message=FALSE, echo=FALSE, fig.cap="Fig.10 Ozone concentration in NC", fig.align='center'}
 # Map the sites by ggplot
- ggplot() +
-   geom_sf(data=counties_NC_sf, fill = 'red', alpha=0.2) +
-   geom_sf(data=EPAair_O3_22mean_sf, aes(color=mean_O3), size=3) + 
-   labs(scale_color_continuous(name="Ozone concentration")
+ggplot() +
+  geom_sf(data=counties_NC_sf, fill = 'red', alpha=0.2) +
+  geom_sf(data=EPAair_O3_22mean_sf, aes(color=mean_O3), size=3) +
+  labs(title = "Ozone concentration in NC")+
+  scale_color_continuous(name="Ozone concentration")
 ```
 
 It seems there is no obvious trend between the location of sites and the mean ozone concentration collected from the sites.
@@ -377,7 +378,7 @@ The null hypothesis: the ozone concentration is stationary over time
 
 The alternative hypothesis: the ozone concentration change over time
 
-```{r Q5, echo=FALSE, fig.cap="Fig.13 Ozone concentrations at Rockwell from 2016 to 2022", fig.align='center'}
+```{r Q5, echo=FALSE, fig.cap="Fig.11 Ozone concentrations at Rockwell from 2016 to 2022", fig.align='center'}
 # Filter data frame for site Rockwell
 EPAair_O3_rockwell <- filter(EPAair_O3, SiteName == 'Rockwell')
 # Line plot showing ozone concentration over time
@@ -388,7 +389,7 @@ ggplot(EPAair_O3_rockwell, aes(x = Date, y = Concentration)) +
   scale_x_date(date_breaks = "1 years", date_labels = "%Y")
 ```
 
-```{r Q5 Time series analysis, echo=FALSE, fig.cap="Fig.14 Seasonal Mann-Kendall test", fig.align='center'}
+```{r Q5 Time series analysis, echo=FALSE, fig.cap="Fig.12 Seasonal Mann-Kendall test", fig.align='center'}
 # Interpolate dates
 Days <- as.data.frame(seq(as.Date("2016-01-01"), as.Date("2022-11-08"), "day"))
 colnames(Days) <- "Date"
@@ -407,4 +408,5 @@ summary(Rockwell_trend)
 
 # 5 Summary and Conclusions:
 
-The Seasonal Mann-Kendall test is chosen to test monotonic trend because the decomposed figure shows that the time series object has a strong seasonal component. From the result, we accept the null hypothesis since the p-value is greater than 0.05. Therefore, the ozone concentration at Rockwell is stationary from 2016 to 2022.
+The Seasonal Mann-Kendall test is chosen to test monotonic trend because the decomposed figure shows that the time series object has a strong seasonal component. From the result, we accept the null hypothesis since the p-value is greater than 0.05. Therefore, the ozone concentration at Rockwell is stationary from 2016 to 2022. 
+To conclude, ozone concentration highly differs among different sites, but we didn’t find trend among geographical regions. Besides, the concentration slightly varies by months but is generally stationary in recent years.
