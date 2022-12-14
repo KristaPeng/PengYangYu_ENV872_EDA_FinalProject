@@ -45,7 +45,7 @@ Here we studied the ozone concentration trend at North Carolina from 2016 to 202
 
 Analysis:
 Part 1: Data wrangling
-```{r include=FALSE, echo = FALSE}
+```{r, include=FALSE, echo = FALSE}
 # Data Wrangling
 # Set working directory
 # Load  packages
@@ -66,7 +66,7 @@ library(tinytex)
 theme_set(theme_bw)
 
 # Load your datasets
-setwd("E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Raw")
+setwd("E:/things/Duke University/study/2022 Fall/ENVIRON 872/PengYangYu_ENV872_EDA_FinalProject/Data/Raw")
 list <- list.files()
 o3_combined <- data.frame()
 for (i in list) {
@@ -115,13 +115,13 @@ Part 2: Data exploring and visualization
 ```{r, message = FALSE,echo=FALSE}
 
 # Set working directory
-setwd('E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data')
+setwd('E:/things/Duke University/study/2022 Fall/ENVIRON 872/PengYangYu_ENV872_EDA_FinalProject/Data')
 
 # Set your ggplot theme
 mytheme <- theme_bw(base_size = 12) + theme(legend.position = "right")
 theme_set(mytheme)
 # Read in dataset
-o3_cleaned <-read.csv("E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_cleaned.csv", stringsAsFactors = TRUE)
+o3_cleaned <-read.csv("E:/things/Duke University/study/2022 Fall/ENVIRON 872/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_cleaned.csv", stringsAsFactors = TRUE)
 #replace the sitename
 o3_cleaned1 <- o3_cleaned %>% 
   mutate(SiteName = str_replace(SiteName, 
@@ -130,7 +130,7 @@ o3_cleaned1 <- o3_cleaned %>%
 ```
 
 # Obtain basic summaries of the data
-```{r,, echo=FALSE}
+```{r, echo=FALSE}
 dim(o3_cleaned1)
 summary(o3_cleaned1)
 ```
@@ -251,10 +251,10 @@ mytheme <- theme_bw(base_size = 12) + theme(legend.position = "right")
 theme_set(mytheme)
 
 # Load datasets
-EPAair_O3 <- read.csv("E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_cleaned.csv", 
+EPAair_O3 <- read.csv("E:/things/Duke University/study/2022 Fall/ENVIRON 872/PengYangYu_ENV872_EDA_FinalProject/Data/Processed/o3_cleaned.csv", 
                       stringsAsFactors = TRUE, row.names = 1) 
 EPAair_O3$Date <- ymd(EPAair_O3$Date)
-counties_NC_sf<- st_read('E:/EDA-project/PengYangYu_ENV872_EDA_FinalProject/Data/Spatial/cb_2018_us_county_20m.shp') %>%
+counties_NC_sf<- st_read('E:/things/Duke University/study/2022 Fall/ENVIRON 872/PengYangYu_ENV872_EDA_FinalProject/Data/Spatial/cb_2018_us_county_20m.shp') %>%
   filter(STATEFP == 37)
 # Filter data frame for data from 2022 
 EPAair_O3_22 <- filter(EPAair_O3, Year == '2022')
