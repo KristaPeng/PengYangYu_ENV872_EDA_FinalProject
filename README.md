@@ -2,7 +2,7 @@
 This is the team repository for the group PengYangYu from Duke University ENV872 course. We are using R to solve real-world related research questions regarding the environment. In this project, we are focusing on the data of ozone concentration in North Carolina, US, from 2016 to 2022. We are eager to study the effect of location, seasons, daily AQI, etc. on ozone concentration using various analysis methods learned from the class.
 
 # Investigators
-1. Yanxi Krista Peng:\tSecond-Year Master Student of Mechanical Engineering & Materials Science Department\tEmail Address: yp116@duke.edu
+1. Yanxi Krista Peng: \t Second-Year Master Student of Mechanical Engineering & Materials Science Department\tEmail Address: yp116@duke.edu
    Role in the Project: Editor of Data Visualization Part
 2. Kaichun Yang:
    Ph.D Candidate of Mechanical Engineering & Materials Science Department
